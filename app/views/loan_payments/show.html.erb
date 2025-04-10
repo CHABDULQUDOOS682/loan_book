@@ -1,0 +1,85 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Loan Payment Details</h1>
+    <div class="flex space-x-2">
+      <% if @loan_book.user == current_user %>
+        <%= link_to 'Edit', edit_book_loan_loan_payment_path(@loan_book, @loan_payment), class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
+      <% end %>
+      <%= link_to 'Back', @loan_book, class: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <%= @loan_payment.given_by %> → <%= @loan_payment.given_to %>
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">
+        <%= @loan_payment.is_cleared ? "Cleared" : "Pending" %> payment
+      </p>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Loan Amount</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= number_to_currency(@loan_payment.amount) %>
+          </dd>
+        </div>
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Total Receivable</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= number_to_currency(@loan_payment.total_receivable) %>
+          </dd>
+        </div>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Amount Received</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= number_to_currency(@loan_payment.received_amount) %>
+            <% unless @loan_payment.is_cleared %>
+              (<%= number_to_currency(@loan_payment.total_receivable - @loan_payment.received_amount) %> remaining)
+            <% end %>
+          </dd>
+        </div>
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Dates</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="font-medium">Given:</span> <%= @loan_payment.given_date %>
+              </div>
+              <div>
+                <span class="font-medium">Due:</span> <span class="<%= due_date_status(@loan_payment.due_date) %>">
+                <%= @loan_payment.due_date %>
+                <%= due_date_label(@loan_payment.due_date) %>
+              </span>
+              </div>
+            </div>
+          </dd>
+        </div>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Witness</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= @loan_payment.witness %>
+          </dd>
+        </div>
+        <% if @loan_payment.notes.present? %>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Notes</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= simple_format(@loan_payment.notes) %>
+            </dd>
+          </div>
+        <% end %>
+        <% if @loan_payment.document.attached? %>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Attached Document</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= link_to @loan_payment.document.filename, rails_blob_path(@loan_payment.document, disposition: "attachment"), class: "text-blue-600 hover:text-blue-800" %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>

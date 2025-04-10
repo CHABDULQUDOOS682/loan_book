@@ -1,0 +1,24 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Your Loan Books</h1>
+    <%= link_to 'New Loan Book', new_book_loan_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @loan_books.each do |loan_book| %>
+      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+        <div class="p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-2"><%= loan_book.name %></h2>
+          <p class="text-gray-600 mb-4">Created by: <%= loan_book.user.name %></p>
+
+          <div class="flex justify-between items-center">
+            <%= link_to 'View', loan_book, class: "text-blue-600 hover:text-blue-800" %>
+            <% if loan_book.user == current_user %>
+              <%= link_to 'Edit', edit_book_loan_path(loan_book), class: "text-gray-600 hover:text-gray-800" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
