@@ -18,4 +18,8 @@ module LoanPaymentsHelper
     end
   end
 
+  # def loan_edited_by
+  #   User.find_by(id: @loan_payment.edited_by).name
+  # end
+
 end

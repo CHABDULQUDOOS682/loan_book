@@ -1,97 +1,173 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-900"><%= @loan_book.name %></h1>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent">
+          <%= @loan_book.name %>
+        </h1>
+        <p class="text-gray-400 mt-2">Loan Book Details</p>
+      </div>
 
-    <div class="flex space-x-2">
-      <% if @loan_book.user == current_user %>
-        <%= link_to 'Edit', edit_book_loan_path(@loan_book), class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
-      <% end %>
-      <%= link_to 'New Payment', new_book_loan_loan_payment_path(@loan_book), class: "bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
-    </div>
-  </div>
+      <% if is_admin? %>
+        <div class="flex space-x-3">
+          <%= link_to edit_book_loan_path(@loan_book), class: "group flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>Edit Book</span>
+          <% end %>
 
-  <div class="bg-white shadow rounded-lg p-6 mb-8">
-    <h2 class="text-xl font-semibold mb-4">Loan Payments</h2>
-
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Given To</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-        </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-        <% @loan_payments.each do |payment| %>
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(payment.amount) %></td>
-            <td class="px-6 py-4 whitespace-nowrap"><%= payment.given_to %></td>
-<!--            <td class="px-6 py-4 whitespace-nowrap"><%#= payment.due_date %></td>-->
-            <td class="px-6 py-4 whitespace-nowrap"><span class="<%= due_date_status(payment.due_date) %>">
-              <%= payment.due_date %>
-              <%= due_date_label(payment.due_date) %>
-            </span>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <% if payment.is_cleared %>
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Cleared</span>
-              <% else %>
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-              <% end %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <%= link_to 'View', [@loan_book, payment], class: "text-blue-600 hover:text-blue-900 mr-2" %>
-              <% if @loan_book.user == current_user %>
-                <%= link_to 'Edit', edit_book_loan_loan_payment_path(@loan_book, payment), class: "text-yellow-600 hover:text-yellow-900 mr-2" %>
-                <%= link_to 'Delete', [@loan_book, payment], method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:text-red-900" %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <% if @loan_book.user == current_user %>
-    <div class="bg-white shadow rounded-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">Shared With</h2>
-
-      <%= form_with model: [@loan_book, @loan_book_user || @loan_book.loan_book_users.new], url: book_loan_loan_book_users_path(@loan_book) do |f| %>
-        <div class="flex space-x-2 mb-4">
-          <div class="flex-grow">
-            <%= f.email_field :email, placeholder: "User email", class: "w-full rounded-md border-gray-300 shadow-sm" %>
-          </div>
-          <div class="w-32">
-            <%= f.select :access_level, LoanBookUser.access_levels.keys.map { |k| [k.titleize, k] }, {}, class: "w-full rounded-md border-gray-300 shadow-sm" %>
-          </div>
-          <div>
-            <%= f.submit "Add User", class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-          </div>
+          <%= link_to new_book_loan_loan_payment_path(@loan_book), class: "group flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span>New Payment</span>
+          <% end %>
         </div>
       <% end %>
-
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Access Level</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-        </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-        <% @loan_book.loan_book_users.each do |user_access| %>
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap"><%= user_access.user.email %></td>
-            <td class="px-6 py-4 whitespace-nowrap"><%= user_access.access_level.titleize %></td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <%= link_to 'Remove', book_loan_loan_book_user_path(@loan_book, user_access), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:text-red-900" %>            </td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
     </div>
-  <% end %>
+
+    <!-- Loan Payments Section -->
+    <div class="backdrop-blur-sm bg-gray-800/70 rounded-xl overflow-hidden border border-blue-400/30 shadow-lg mb-8">
+      <div class="p-1 bg-gradient-to-r from-violet-600 to-blue-500">
+        <div class="bg-gray-900 p-6">
+          <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Loan Payments
+          </h2>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-700">
+              <thead class="bg-gray-800">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Amount</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Given To</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Due Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Actions</th>
+              </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700">
+              <% @loan_payments.each do |payment| %>
+                <tr class="hover:bg-gray-800/50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-white"><%= number_to_currency(payment.amount) %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-gray-300"><%= payment.given_to %></td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="<%= due_date_status(payment.due_date) %> flex items-center">
+                        <%= payment.due_date.strftime('%b %d, %Y') %>
+                        <span class="ml-2 text-xs <%= due_date_status(payment.due_date) %>">
+                          <%= due_date_label(payment.due_date) %>
+                        </span>
+                      </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if payment.is_cleared %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-900/50 text-green-400">Cleared</span>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-900/50 text-yellow-400">Pending</span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    <%= link_to [@loan_book, payment], class: "text-blue-400 hover:text-blue-300" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    <% end %>
+                    <% if is_admin? %>
+                      <%= link_to edit_book_loan_loan_payment_path(@loan_book, payment), class: "text-amber-400 hover:text-amber-300" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      <% end %>
+                      <%= link_to [@loan_book, payment], method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-400 hover:text-red-300" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shared With Section -->
+    <div class="backdrop-blur-sm bg-gray-800/70 rounded-xl overflow-hidden border border-blue-400/30 shadow-lg">
+      <div class="p-1 bg-gradient-to-r from-violet-600 to-blue-500">
+        <div class="bg-gray-900 p-6">
+          <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Shared With
+          </h2>
+
+          <% if is_admin? %>
+            <%= form_with model: [@loan_book, @loan_book_user || @loan_book.loan_book_users.new], url: book_loan_loan_book_users_path(@loan_book), class: "mb-6" do |f| %>
+              <div class="flex flex-col sm:flex-row gap-16">
+                <div class="flex-grow">
+                  <%= f.email_field :email, placeholder: "User email", class: "w-full bg-gray-800/50 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2" %>
+                </div>
+                <div class="w-full sm:w-52">
+                  <%= f.select :access_level, LoanBookUser.access_levels.keys.map { |k| [k.titleize, k] }, {}, class: "w-full bg-gray-800/50 border border-gray-700 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2" %>
+                </div>
+                <div>
+                  <%= f.submit "Add User", class: "w-full sm:w-auto px-6 py-2 rounded-full bg-gradient-to-r from-violet-600 to-blue-500 text-white hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300" %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-700">
+              <thead class="bg-gray-800">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">User</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Access Level</th>
+                <% if is_admin? %>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Actions</th>
+                <% end %>
+              </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700">
+              <% @loan_book.loan_book_users.each do |user_access| %>
+                <tr class="hover:bg-gray-800/50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-white"><%= user_access.user.email %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-gray-300"><%= user_access.access_level.titleize %></td>
+                  <% if is_admin? %>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <%= link_to book_loan_loan_book_user_path(@loan_book, user_access), data: { turbo_method: :delete, confirm: 'Are you sure?' }, class: "text-red-400 hover:text-red-300" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      <% end %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Animated Background Elements -->
+<div class="fixed inset-0 overflow-hidden -z-10">
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900"></div>
+  <div class="absolute inset-0 opacity-25">
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-violet-600 filter blur-3xl opacity-20 animate-pulse"></div>
+    <div class="absolute top-2/3 left-1/3 w-80 h-80 rounded-full bg-blue-600 filter blur-3xl opacity-15 animate-pulse animation-delay-2000"></div>
+    <div class="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-pink-600 filter blur-3xl opacity-15 animate-pulse animation-delay-4000"></div>
+  </div>
 </div>

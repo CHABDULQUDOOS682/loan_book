@@ -1,25 +1,38 @@
-# README
+# Loan Book Management System
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails application for managing loan payments with multi-user access control.
 
-Things you may want to cover:
+## Features
 
-* Ruby version
+- User authentication with Devise
+- Loan book creation and management
+- Loan payment tracking with due date alerts
+- Document attachments
+- Multi-user collaboration with permission levels
+- Responsive Tailwind CSS design
 
-* System dependencies
+## Prerequisites
 
-* Configuration
+- Ruby 3.2.2
+- Rails 7.0.8
+- PostgreSQL 14+
+- Node.js 18+
+- Yarn
 
-* Database creation
+## 🚀 Quick Start Commands
 
-* Database initialization
+### Setup Commands
+```bash
+# Clone repository
+git clone https://github.com/CHABDULQUDOOS682/loan_book.git
+cd loan_book
 
-* How to run the test suite
+# Install Ruby dependencies
+bundle install
 
-* Services (job queues, cache servers, search engines, etc.)
+# Install JavaScript dependencies for Tailwind CSS
+yarn install
 
-* Deployment instructions
-
-* ...
-# loan_book
+# Setup database (PostgreSQL)
+rails db:create
+rails db:migrate

@@ -4,5 +4,5 @@ class BookLoan < ApplicationRecord
   has_many :shared_users, through: :loan_book_users, source: :user
   has_many :loan_payments
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 end

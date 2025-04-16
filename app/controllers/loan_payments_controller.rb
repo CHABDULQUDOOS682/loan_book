@@ -30,6 +30,7 @@ class LoanPaymentsController < ApplicationController
   end
 
   def update
+    @loan_payment.edited_by = current_user.id
     if @loan_payment.update(loan_payment_params)
       redirect_to [ @loan_book, @loan_payment ], notice: "Loan payment was successfully updated."
     else

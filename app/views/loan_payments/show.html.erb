@@ -1,85 +1,155 @@
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Loan Payment Details</h1>
-    <div class="flex space-x-2">
-      <% if @loan_book.user == current_user %>
-        <%= link_to 'Edit', edit_book_loan_loan_payment_path(@loan_book, @loan_payment), class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
-      <% end %>
-      <%= link_to 'Back', @loan_book, class: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" %>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+  <!-- Animated Background Elements -->
+  <div class="fixed inset-0 overflow-hidden -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900"></div>
+    <div class="absolute inset-0 opacity-25">
+      <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-violet-600 filter blur-3xl opacity-20 animate-pulse"></div>
+      <div class="absolute top-2/3 left-1/3 w-80 h-80 rounded-full bg-blue-600 filter blur-3xl opacity-15 animate-pulse animation-delay-2000"></div>
+      <div class="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-pink-600 filter blur-3xl opacity-15 animate-pulse animation-delay-4000"></div>
     </div>
   </div>
 
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">
-        <%= @loan_payment.given_by %> → <%= @loan_payment.given_to %>
-      </h3>
-      <p class="mt-1 max-w-2xl text-sm text-gray-500">
-        <%= @loan_payment.is_cleared ? "Cleared" : "Pending" %> payment
-      </p>
+  <div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent">
+          Loan Payment Details
+        </h1>
+        <p class="mt-1 text-sm text-gray-400">Transaction between <%= @loan_payment.given_by %> and <%= @loan_payment.given_to %></p>
+      </div>
+
+      <% if is_admin? %>
+        <div class="flex space-x-3">
+          <%= link_to edit_book_loan_loan_payment_path(@loan_book, @loan_payment), class: "group flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>Edit</span>
+          <% end %>
+
+          <%= link_to @loan_book, class: "group flex items-center space-x-2 px-4 py-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 hover:shadow-lg transition-all duration-300" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back</span>
+          <% end %>
+        </div>
+      <% end %>
     </div>
-    <div class="border-t border-gray-200">
-      <dl>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Loan Amount</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= number_to_currency(@loan_payment.amount) %>
-          </dd>
-        </div>
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Total Receivable</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= number_to_currency(@loan_payment.total_receivable) %>
-          </dd>
-        </div>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Amount Received</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= number_to_currency(@loan_payment.received_amount) %>
+
+    <!-- Payment Details Card -->
+    <div class="backdrop-blur-sm bg-gray-800/70 rounded-xl overflow-hidden border border-blue-400/30 shadow-2xl">
+      <!-- Status Header -->
+      <div class="p-1 bg-gradient-to-r <%= @loan_payment.is_cleared ? 'from-green-600 to-emerald-500' : 'from-amber-500 to-yellow-500' %>">
+        <div class="bg-gray-900 px-6 py-4">
+          <h3 class="text-lg font-medium text-white flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <%= @loan_payment.given_by %> → <%= @loan_payment.given_to %>
+          </h3>
+          <div class="mt-1 flex items-center">
+            <span class="px-2 py-1 text-xs font-medium rounded-full <%= @loan_payment.is_cleared ? 'bg-green-900/50 text-green-400' : 'bg-amber-900/50 text-amber-400' %>">
+              <%= @loan_payment.is_cleared ? "Cleared" : "Pending" %>
+            </span>
             <% unless @loan_payment.is_cleared %>
-              (<%= number_to_currency(@loan_payment.total_receivable - @loan_payment.received_amount) %> remaining)
-            <% end %>
-          </dd>
-        </div>
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Dates</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <span class="font-medium">Given:</span> <%= @loan_payment.given_date %>
-              </div>
-              <div>
-                <span class="font-medium">Due:</span> <span class="<%= due_date_status(@loan_payment.due_date) %>">
-                <%= @loan_payment.due_date %>
+              <span class="ml-2 text-xs <%= due_date_status(@loan_payment.due_date) %>">
                 <%= due_date_label(@loan_payment.due_date) %>
               </span>
-              </div>
-            </div>
-          </dd>
+            <% end %>
+          </div>
         </div>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Witness</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @loan_payment.witness %>
-          </dd>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="divide-y divide-gray-700">
+        <!-- Amount Details -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
+          <div class="p-6 bg-gray-800/50 border-b border-gray-700 md:border-b-0 md:border-r border-gray-700">
+            <dt class="text-sm font-medium text-blue-300 mb-2">Loan Amount</dt>
+            <dd class="text-lg font-semibold text-white">
+              <%= number_to_currency(@loan_payment.amount) %>
+            </dd>
+          </div>
+          <div class="p-6 bg-gray-800/30 border-b border-gray-700 md:border-b-0 md:border-r border-gray-700">
+            <dt class="text-sm font-medium text-blue-300 mb-2">Total Receivable</dt>
+            <dd class="text-lg font-semibold text-white">
+              <%= number_to_currency(@loan_payment.total_receivable) %>
+            </dd>
+          </div>
+          <div class="p-6 bg-gray-800/50">
+            <dt class="text-sm font-medium text-blue-300 mb-2">Amount Received</dt>
+            <dd class="text-lg font-semibold text-white">
+              <%= number_to_currency(@loan_payment.received_amount) %>
+              <% unless @loan_payment.is_cleared %>
+                <span class="block text-sm font-normal text-amber-400 mt-2">
+                  <%= number_to_currency(@loan_payment.total_receivable - @loan_payment.received_amount) %> remaining
+                </span>
+              <% end %>
+            </dd>
+          </div>
         </div>
+
+        <!-- Date Information -->
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-blue-300 mb-2">Given Date</dt>
+            <dd class="text-white">
+              <%= @loan_payment.given_date.strftime('%b %d, %Y') %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-blue-300 mb-2">Due Date</dt>
+            <dd class="text-white">
+              <span class="<%= due_date_status(@loan_payment.due_date) %>">
+                <%= @loan_payment.due_date.strftime('%b %d, %Y') %>
+              </span>
+            </dd>
+          </div>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-blue-300 mb-2">Witness</dt>
+            <dd class="text-white">
+              <%= @loan_payment.witness || 'Not specified' %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-blue-300 mb-2">Record Created By</dt>
+            <dd class="text-white">
+              <%= @loan_payment.user.name %>
+            </dd>
+          </div>
+        </div>
+
+        <!-- Notes Section -->
         <% if @loan_payment.notes.present? %>
-          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500">Notes</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <%= simple_format(@loan_payment.notes) %>
+          <div class="p-6">
+            <dt class="text-sm font-medium text-blue-300 mb-2">Notes</dt>
+            <dd class="text-white bg-gray-500/30 rounded-lg p-4 border border-gray-600">
+              <%= simple_format(@loan_payment.notes, class: "text-gray-100") %>
             </dd>
           </div>
         <% end %>
+
+        <!-- Document Attachment -->
         <% if @loan_payment.document.attached? %>
-          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500">Attached Document</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <%= link_to @loan_payment.document.filename, rails_blob_path(@loan_payment.document, disposition: "attachment"), class: "text-blue-600 hover:text-blue-800" %>
+          <div class="p-6">
+            <dt class="text-sm font-medium text-blue-300 mb-2">Attached Document</dt>
+            <dd>
+              <%= link_to rails_blob_path(@loan_payment.document, disposition: "attachment"), class: "inline-flex items-center px-4 py-2 rounded-full bg-gray-700 text-blue-400 hover:text-blue-300 hover:bg-gray-600 transition-colors" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <%= @loan_payment.document.filename %>
+              <% end %>
             </dd>
           </div>
         <% end %>
-      </dl>
+      </div>
     </div>
   </div>
 </div>

@@ -4,19 +4,23 @@ class LoanBookUsersController < ApplicationController
   before_action :set_loan_book
 
   def create
-    email = params[:loan_book_user][:email]
-    user = User.find_or_create_by(email: email) do |u|
-      u.password = Devise.friendly_token[0, 20]
-      u.name = email.split("@").first
-    end
+    if params[:loan_book_user][:email].present?
+      email = params[:loan_book_user][:email]
+      user = User.find_or_create_by(email: email) do |u|
+        u.password = Devise.friendly_token[0, 20]
+        u.name = email.split("@").first
+      end
 
-    @loan_book_user = @loan_book.loan_book_users.find_or_initialize_by(user: user)
-    @loan_book_user.access_level = params[:loan_book_user][:access_level] || "view"
+      @loan_book_user = @loan_book.loan_book_users.find_or_initialize_by(user: user)
+      @loan_book_user.access_level = params[:loan_book_user][:access_level] || "view"
 
-    if @loan_book_user.save
-      redirect_to @loan_book, notice: "User added successfully."
+      if @loan_book_user.save
+        redirect_to @loan_book, notice: "User added successfully."
+      else
+        redirect_to @loan_book, alert: "Error adding user."
+      end
     else
-      redirect_to @loan_book, alert: "Error adding user."
+      redirect_to @loan_book, alert: "Email must be present."
     end
   end
 

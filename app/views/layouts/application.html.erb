@@ -11,25 +11,51 @@
   <%= stylesheet_link_tag "custom", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 
-  <!-- Inter font from Google Fonts -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS via CDN -->
+  <!-- Tailwind CSS with custom config -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
       tailwind.config = {
           important: true,
-          corePlugins: {
-              preflight: false, // Disable Tailwind's base styles since we have our own
+          theme: {
+              extend: {
+                  colors: {
+                      cosmic: {
+                          primary: '#6d28d9',
+                          secondary: '#8b5cf6',
+                          accent: '#a78bfa',
+                          dark: '#1e1b4b',
+                          light: '#f5f3ff',
+                      },
+                      nebula: {
+                          blue: '#3b82f6',
+                          purple: '#7c3aed',
+                          pink: '#ec4899'
+                      }
+                  },
+                  fontFamily: {
+                      sans: ['Inter', 'sans-serif'],
+                      exo: ['"Exo 2"', 'sans-serif']
+                  },
+              }
           },
+          corePlugins: {
+              preflight: false,
+          }
       }
   </script>
+
+  <!-- Animate.css for subtle animations -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 
-<body class="bg-gray-50 font-sans">
+<body class="bg-gradient-to-br from-gray-900 to-blue-900 font-sans">
 <%= render 'shared/navbar' %>
 
-<main class="container mx-auto px-4 py-8">
+<main class="h-full">
   <% if notice %>
     <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
       <p class="font-bold">Notice</p>
@@ -46,5 +72,8 @@
 
   <%= yield %>
 </main>
+
+<!-- Alpine.js for interactivity -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

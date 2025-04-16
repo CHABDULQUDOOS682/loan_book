@@ -1,24 +1,105 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Your Loan Books</h1>
-    <%= link_to 'New Loan Book', new_book_loan_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-  </div>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent">
+          Your Loan Books
+        </h1>
+        <p class="text-gray-400 mt-2">Manage all your active loan portfolios</p>
+      </div>
+      <%= link_to new_book_loan_path, class: "group flex items-center space-x-2 px-6 py-3 rounded-full bg-gradient-to-r from-violet-600 to-blue-500 text-white hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300 transform hover:scale-[1.02]" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        <span>New Loan Book</span>
+      <% end %>
+    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% @loan_books.each do |loan_book| %>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-        <div class="p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-2"><%= loan_book.name %></h2>
-          <p class="text-gray-600 mb-4">Created by: <%= loan_book.user.name %></p>
+    <!-- Loan Books Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @loan_books.each do |loan_book| %>
+        <div class="relative group backdrop-blur-sm bg-gray-800/70 rounded-xl overflow-hidden border border-blue-400/30 shadow-lg hover:shadow-xl hover:border-violet-400/50 transition-all duration-300">
+          <!-- Gradient accent -->
+          <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet-500 to-blue-500"></div>
 
-          <div class="flex justify-between items-center">
-            <%= link_to 'View', loan_book, class: "text-blue-600 hover:text-blue-800" %>
-            <% if loan_book.user == current_user %>
-              <%= link_to 'Edit', edit_book_loan_path(loan_book), class: "text-gray-600 hover:text-gray-800" %>
-            <% end %>
+          <div class="p-6">
+            <div class="flex items-start justify-between mb-4">
+              <h2 class="text-xl font-semibold text-white mb-2 truncate"><%= loan_book.name %></h2>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= loan_book.user == current_user ? 'bg-blue-500/20 text-blue-300' : 'bg-gray-700 text-gray-300' %>">
+                <%= loan_book.user == current_user ? 'Owner' : 'Member' %>
+              </span>
+            </div>
+
+            <!-- Metadata Section -->
+            <div class="space-y-3 mb-4">
+              <div class="flex items-center text-sm text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Created: <%= loan_book.created_at.strftime('%b %d, %Y') %>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Updated: <%= loan_book.updated_at.strftime('%b %d, %Y') %>
+              </div>
+
+              <div class="flex items-start text-sm text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 mt-0.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <div>
+                  <span class="block">Owner: <%= loan_book.user.name %></span>
+                  <%# if loan_book.members.any? %>
+<!--                    <span class="block mt-1">Members: <%#= loan_book.members.map(&:name).join(', ') %></span>-->
+                  <%# end %>
+                </div>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+<!--                Status: <span class="ml-1 <%#= loan_book.status == 'active' ? 'text-green-400' : 'text-amber-400' %>"><%#= loan_book.status.capitalize %></span>-->
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+              <%= link_to loan_book, class: "text-sm font-medium text-blue-400 hover:text-blue-300 flex items-center group" do %>
+                View Details
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              <% end %>
+
+              <% if loan_book.user == current_user %>
+                <div class="flex space-x-3">
+                  <%= link_to edit_book_loan_path(loan_book), class: "text-sm font-medium text-gray-400 hover:text-gray-300 flex items-center" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Animated Background Elements -->
+<div class="fixed inset-0 overflow-hidden -z-10">
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900"></div>
+  <div class="absolute inset-0 opacity-25">
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-violet-600 filter blur-3xl opacity-20 animate-pulse"></div>
+    <div class="absolute top-2/3 left-1/3 w-80 h-80 rounded-full bg-blue-600 filter blur-3xl opacity-15 animate-pulse animation-delay-2000"></div>
+    <div class="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-pink-600 filter blur-3xl opacity-15 animate-pulse animation-delay-4000"></div>
   </div>
 </div>

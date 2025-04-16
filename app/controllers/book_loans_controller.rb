@@ -1,7 +1,6 @@
 class BookLoansController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_loan_book, only: [:show, :edit, :update, :destroy, :add_user]
-
+  before_action :set_loan_book, only: [:show, :edit, :update, :destroy ]
   def index
     @loan_books = current_user.book_loans + current_user.shared_loan_books
   end
@@ -17,11 +16,11 @@ class BookLoansController < ApplicationController
 
   def create
     @loan_book = current_user.book_loans.new(loan_book_params)
-
     if @loan_book.save
+      @loan_book.loan_book_users.create(user: current_user, access_level: "admin")
       redirect_to @loan_book, notice: "Loan book was successfully created."
     else
-      render :new
+      redirect_to new_book_loan_path, notice: "Book name should be unique."
     end
   end
 
@@ -39,22 +38,6 @@ class BookLoansController < ApplicationController
   def destroy
     @loan_book.destroy
     redirect_to book_loans_url, notice: "Loan book was successfully destroyed."
-  end
-
-  def add_user
-    email = params[:loan_book_user][:email]
-    user = User.find_or_create_by(email: email) do |u|
-      u.password = Devise.friendly_token[0, 20]
-      u.name = email.split("@").first
-    end
-
-    @loan_book_user = @loan_book.loan_book_users.find_or_initialize_by(user: user)
-    @loan_book_user.access_level = params[:loan_book_user][:access_level] || "view"
-    if @loan_book_user.save
-      redirect_to @loan_book, notice: "User added successfully."
-    else
-      redirect_to @loan_book, alert: "Error adding user."
-    end
   end
 
   private

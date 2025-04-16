@@ -1,62 +1,96 @@
-<div class="container mx-auto px-4 py-8 max-w-2xl">
-  <h1 class="text-2xl font-bold text-gray-900 mb-6">New Loan Payment for <%= @loan_book.name %></h1>
-
-  <%= form_with(model: [@loan_book, @loan_payment], local: true) do |form| %>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="mb-4">
-        <%= form.label :amount, "Loan Amount", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.number_field :amount, step: 0.01, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :given_by, "Lender", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.text_field :given_by, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :given_to, "Borrower", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.text_field :given_to, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :witness, "Witness", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.text_field :witness, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :given_date, "Date Given", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.date_field :given_date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :due_date, "Due Date", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.date_field :due_date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :total_receivable, "Total Receivable", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.number_field :total_receivable, step: 0.01, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4">
-        <%= form.label :received_amount, "Amount Received", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.number_field :received_amount, step: 0.01, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4 col-span-2">
-        <%= form.label :notes, "Notes", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.text_area :notes, rows: 3, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <div class="mb-4 col-span-2">
-        <%= form.label :document, "Attach Document", class: "block text-gray-700 text-sm font-bold mb-2" %>
-        <%= form.file_field :document, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
-      </div>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900/30 to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent">
+        New Loan Payment
+      </h1>
+      <p class="mt-2 text-sm text-gray-400">For <%= @loan_book.name %></p>
     </div>
 
-    <div class="flex items-center justify-between mt-6">
-      <%= form.submit "Create Loan Payment", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
-      <%= link_to 'Cancel', @loan_book, class: "inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800" %>
+    <div class="backdrop-blur-sm bg-gray-800/70 rounded-xl overflow-hidden border border-blue-400/30 shadow-2xl p-8">
+      <%= form_with(model: [@loan_book, @loan_payment], local: true) do |form| %>
+        <div class="space-y-6">
+          <!-- Single Row Fields -->
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <%= form.label :amount, "Loan Amount", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-400">$</span>
+                </div>
+                <%= form.number_field :amount, step: 0.01, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200", placeholder: "0.00" %>
+              </div>
+            </div>
+
+            <div>
+              <%= form.label :given_by, "Lender", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <%= form.text_field :given_by, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200" %>
+            </div>
+
+            <div>
+              <%= form.label :given_to, "Borrower", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <%= form.text_field :given_to, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200" %>
+            </div>
+
+            <div>
+              <%= form.label :witness, "Witness", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <%= form.text_field :witness, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200" %>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <%= form.label :given_date, "Date Given", class: "block text-sm font-medium text-blue-100 mb-2" %>
+                <%= form.date_field :given_date, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200" %>
+              </div>
+
+              <div>
+                <%= form.label :due_date, "Due Date", class: "block text-sm font-medium text-blue-100 mb-2" %>
+                <%= form.date_field :due_date, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200" %>
+              </div>
+            </div>
+
+            <div>
+              <%= form.label :total_receivable, "Total Receivable", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-400">$</span>
+                </div>
+                <%= form.number_field :total_receivable, step: 0.01, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200", placeholder: "0.00" %>
+              </div>
+            </div>
+
+            <div>
+              <%= form.label :received_amount, "Amount Received", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-400">$</span>
+                </div>
+                <%= form.number_field :received_amount, step: 0.01, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200", placeholder: "0.00" %>
+              </div>
+            </div>
+
+            <div>
+              <%= form.label :notes, "Notes", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <%= form.text_area :notes, rows: 3, class: "bg-gray-800/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-3 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none transition duration-200" %>
+            </div>
+
+            <!-- Document Upload (keeping your requested styling with updated colors) -->
+            <div>
+              <%= form.label :document, "Attach Document", class: "block text-sm font-medium text-blue-100 mb-2" %>
+              <%= form.file_field :document, class: "block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-900/50 file:text-blue-300 hover:file:bg-blue-800/70" %>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex flex-col sm:flex-row justify-between pt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+            <%= form.submit "Create Loan Payment", class: "w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:scale-105" %>
+
+            <%= link_to @loan_book, class: "w-full sm:w-auto flex items-center justify-center px-6 py-3 border border-gray-700 rounded-full text-gray-300 font-medium bg-gray-800/50 hover:bg-gray-700/70 transition duration-200" do %>
+              Cancel
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
-  <% end %>
+  </div>
 </div>
